@@ -29,6 +29,7 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/usuario/criarArquiteto").permitAll()
                         .requestMatchers(HttpMethod.POST, "/autenticar/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/autenticar/refreshToken").permitAll()
                         .requestMatchers(HttpMethod.POST, "/autenticar/login").permitAll()
                         .anyRequest().authenticated()
                 )

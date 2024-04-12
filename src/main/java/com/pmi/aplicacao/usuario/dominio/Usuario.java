@@ -31,10 +31,6 @@ public class Usuario implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private UsuarioRole role;
-    /*
-    @Embedded
-    private Acesso acesso;
-    */
 
     @Embedded
     private DadosPessoais dadosPessoais;

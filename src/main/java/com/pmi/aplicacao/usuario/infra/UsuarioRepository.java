@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
 
     UserDetails findByLogin(String login);
+
+    @Query(value = "SELECT * FROM usuario WHERE login = ?", nativeQuery = true)
+    Usuario findByLoginSql(String login);
 }

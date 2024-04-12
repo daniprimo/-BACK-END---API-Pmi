@@ -5,6 +5,7 @@ import com.pmi.aplicacao.auttenticacao.config.TokenService;
 import com.pmi.aplicacao.auttenticacao.dto.AuthenticationDTO;
 import com.pmi.aplicacao.auttenticacao.dto.LoginResponseDTO;
 import com.pmi.aplicacao.auttenticacao.dto.RegisterDTO;
+import com.pmi.aplicacao.auttenticacao.dto.RequestRefreshToken;
 import com.pmi.aplicacao.usuario.dominio.*;
 import com.pmi.aplicacao.usuario.infra.*;
 import jakarta.validation.Valid;
@@ -48,11 +49,23 @@ public class AuthenticationController {
                    new UsernamePasswordAuthenticationToken(data.login(), data.password());
            var auth = this.authenticationManager.authenticate(usernamePassword);
            System.out.println(auth);
-           var token = this.tokenService.geradorToken((Usuario) auth.getPrincipal());
-           return ResponseEntity.ok(new LoginResponseDTO(token));
+           LoginResponseDTO token;
+           token = this.tokenService.obterToken(data);
+           return ResponseEntity.ok(token);
        }catch (UsernameNotFoundException e) {
            throw new RuntimeException("Erro na autenticação");
        }
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity login(@RequestBody RequestRefreshToken refreshToken){
+        try {
+            LoginResponseDTO token;
+            token = this.tokenService.obterRefresfToken(refreshToken.regreshToken());
+            return ResponseEntity.ok(token);
+        }catch (UsernameNotFoundException e) {
+            throw new RuntimeException("Erro na autenticação");
+        }
     }
 
     @PostMapping("/register")
