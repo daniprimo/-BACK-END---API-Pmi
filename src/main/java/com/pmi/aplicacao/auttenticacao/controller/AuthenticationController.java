@@ -8,6 +8,10 @@ import com.pmi.aplicacao.auttenticacao.dto.RegisterDTO;
 import com.pmi.aplicacao.auttenticacao.dto.RequestRefreshToken;
 import com.pmi.aplicacao.usuario.dominio.*;
 import com.pmi.aplicacao.usuario.infra.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/autenticar")
+@Tag(name = "Autenticacao")
 public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -43,6 +48,13 @@ public class AuthenticationController {
     private DesenvolvedorRepository desenvolvedorRepository;
 
     @PostMapping("/login")
+    @Operation(summary = "Fornece o tokem de acesso as demais funcionalidades da api", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso."),
+            @ApiResponse(responseCode = "401", description = "Usuario não autenticado."),
+            @ApiResponse(responseCode = "403", description = "Usuario não autorizado."),
+            @ApiResponse(responseCode = "500", description = "Falha no servidor.")
+    })
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
        try {
            UsernamePasswordAuthenticationToken usernamePassword =
@@ -77,24 +89,28 @@ public class AuthenticationController {
         Usuario usuario = new Usuario();
         if (data.role() == UsuarioRole.ARQUITETO) {
             Arquiteto newUser = new Arquiteto(data.login(), encryptedPassword, data.role());
+            newUser.setPrimeiroAcesso(true);
             usuario = this.arquitetoRepository.save(newUser);
         }
 
 
         if (data.role() == UsuarioRole.GESTAO) {
             Gestao newUser = new Gestao(data.login(), encryptedPassword, data.role());
+            newUser.setPrimeiroAcesso(true);
             usuario = this.gestaoRepository.save(newUser);
         }
 
 
         if (data.role() == UsuarioRole.TECH_LEAD) {
             TechLead newUser = new TechLead(data.login(), encryptedPassword, data.role());
+            newUser.setPrimeiroAcesso(true);
             usuario = this.techLeadRepository.save(newUser);
         }
 
 
         if (data.role() == UsuarioRole.DESENVOLVEDOR) {
             Desenvolvedor newUser = new Desenvolvedor(data.login(), encryptedPassword, data.role());
+            newUser.setPrimeiroAcesso(true);
             usuario = this.desenvolvedorRepository.save(newUser);
         }
 

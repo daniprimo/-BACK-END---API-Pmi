@@ -66,23 +66,29 @@ public class TokenService {
                     .verify(token)
                     .getSubject();
         }catch (JWTVerificationException exception) {
-            return "";
+            return null;
         }
     }
 
     private Instant genExpirationDate(Integer expiration){
-        return LocalDateTime.now().plusHours(expiration).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusSeconds(expiration).toInstant(ZoneOffset.of("-03:00"));
     }
 
     public LoginResponseDTO obterRefresfToken(String token) {
 
         String login = validateToken(token);
+        System.out.println(login);
+
         Usuario user = usuarioRepository.buscarUsuario(login);
-        if (user == null) {
+        System.out.println(user);
+
+
+        if (user.getId() == null) {
+
             throw new RuntimeException("Token não autorizado");
         }
 
-        if (user != null) {
+        if (user.getId() != null) {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
