@@ -29,12 +29,10 @@ public class Usuario implements UserDetails {
 
     private String password;
 
+    private Boolean primeiroAcesso;
+
     @Enumerated(EnumType.STRING)
     private UsuarioRole role;
-    /*
-    @Embedded
-    private Acesso acesso;
-    */
 
     @Embedded
     private DadosPessoais dadosPessoais;
@@ -52,8 +50,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        System.out.println("Passou pelo authorites");
-        if (this.getRole() == UsuarioRole.DESENVOLVEDOR)
+         if (this.getRole() == UsuarioRole.DESENVOLVEDOR)
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
 
         if (this.getRole() == UsuarioRole.TECH_LEAD)
