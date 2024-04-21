@@ -74,7 +74,7 @@ public class TokenService {
         return LocalDateTime.now().plusSeconds(expiration).toInstant(ZoneOffset.of("-03:00"));
     }
 
-    public LoginResponseDTO obterRefresfToken(String token) {
+    public LoginResponseDTO obterRefresfToken(String token) throws Exception {
 
         String login = validateToken(token);
         System.out.println(login);
