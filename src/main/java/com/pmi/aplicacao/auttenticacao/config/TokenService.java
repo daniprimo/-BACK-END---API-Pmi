@@ -83,15 +83,16 @@ public class TokenService {
         System.out.println(user);
 
 
-        if (user.getId() == null) {
-
-            throw new RuntimeException("Token não autorizado");
-        }
-
         if (user.getId() != null) {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
+        if (user.getId() == null) {
+
+            throw new Exception("Token não autorizado");
+        }
+
 
         return LoginResponseDTO.builder()
                 .token(geradorToken(user, expirationToken))
