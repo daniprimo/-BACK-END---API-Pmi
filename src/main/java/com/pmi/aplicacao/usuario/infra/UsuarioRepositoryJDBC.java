@@ -37,6 +37,10 @@ public class UsuarioRepositoryJDBC {
             usuario.setId(rs.getString("id"));
             usuario.setLogin(rs.getString("login"));
             usuario.setRole(UsuarioRole.valueOf(rs.getString("role")));
+            usuario.setDadosPessoais(dadosPessoais);
+            usuario.setEndereco(endereco);
+            usuario.setPrimeiroAcesso(rs.getBoolean("primeiro_acesso"));
+            usuario.setPassword(rs.getString("password"));
         }
         return usuario;
     }
