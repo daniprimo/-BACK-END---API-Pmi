@@ -74,7 +74,7 @@ public class TokenService {
         return LocalDateTime.now().plusSeconds(expiration).toInstant(ZoneOffset.of("-03:00"));
     }
 
-    public LoginResponseDTO obterRefresfToken(String token) {
+    public LoginResponseDTO obterRefresfToken(String token) throws Exception {
 
         String login = validateToken(token);
         System.out.println(login);
@@ -83,15 +83,16 @@ public class TokenService {
         System.out.println(user);
 
 
-        if (user.getId() == null) {
-
-            throw new RuntimeException("Token não autorizado");
-        }
-
         if (user.getId() != null) {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
+        if (user.getId() == null) {
+
+            throw new Exception("Token não autorizado");
+        }
+
 
         return LoginResponseDTO.builder()
                 .token(geradorToken(user, expirationToken))

@@ -55,33 +55,33 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "403", description = "Usuario não autorizado."),
             @ApiResponse(responseCode = "500", description = "Falha no servidor.")
     })
-    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
-       try {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data){
+
+        try {
            UsernamePasswordAuthenticationToken usernamePassword =
                    new UsernamePasswordAuthenticationToken(data.login(), data.password());
            var auth = this.authenticationManager.authenticate(usernamePassword);
-           System.out.println(auth);
            LoginResponseDTO token;
            token = this.tokenService.obterToken(data);
            return ResponseEntity.ok(token);
-       }catch (UsernameNotFoundException e) {
+       }catch (RuntimeException e) {
            throw new RuntimeException("Erro na autenticação");
        }
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity login(@RequestBody RequestRefreshToken refreshToken){
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody RequestRefreshToken refreshToken){
         try {
             LoginResponseDTO token;
             token = this.tokenService.obterRefresfToken(refreshToken.regreshToken());
             return ResponseEntity.ok(token);
-        }catch (UsernameNotFoundException e) {
+        }catch (Exception e) {
             throw new RuntimeException("Erro na autenticação");
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Valid RegisterDTO data){
+    public ResponseEntity<Usuario> register(@RequestBody @Valid RegisterDTO data){
         if(this.usuarioRepository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());

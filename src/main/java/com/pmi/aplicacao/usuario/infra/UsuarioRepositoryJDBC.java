@@ -4,6 +4,7 @@ import com.pmi.aplicacao.usuario.dominio.DadosPessoais;
 import com.pmi.aplicacao.usuario.dominio.Endereco;
 import com.pmi.aplicacao.usuario.dominio.Usuario;
 import com.pmi.aplicacao.usuario.dominio.UsuarioRole;
+import com.pmi.aplicacao.usuario.dto.record.RetornoServicoBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -40,4 +41,45 @@ public class UsuarioRepositoryJDBC {
         return usuario;
     }
 
+    public RetornoServicoBase inserirInformacoesDoUsuario(String login, DadosPessoais dadosPessoais, Endereco endereco) {
+
+        try {
+            StringBuffer query = new StringBuffer();
+            query.append("UPDATE usuario " +
+                    " SET cpf=?, " +
+                    "nome=?, " +
+                    "telefone=?, " +
+                    "cep=?, " +
+                    "bairro=?, " +
+                    "logradouro=?, " +
+                    "cidade=?, " +
+                    "numero=?, " +
+                    "primeiro_acesso=? " +
+                    "where login = ?");
+
+            System.out.println(query.toString());
+            jdbcTemplate.update(query.toString(),
+                                dadosPessoais.getCpf(),
+                                dadosPessoais.getNome(),
+                                dadosPessoais.getTelefone(),
+                                endereco.getCep(),
+                                endereco.getBairro(),
+                                endereco.getLogradouro(),
+                                endereco.getCidade(),
+                                endereco.getNumero(),
+                                false,
+                                login);
+            return new RetornoServicoBase(
+                    "ATUALIZAR",
+                    true,
+                    "Usuario atualizado com sucesso.");
+        }catch (Exception e) {
+            return new RetornoServicoBase(
+                    "ATUALIZAR",
+                    false,
+                    "Usuario não foi atualizado.");
+
+        }
+
+    }
 }
