@@ -40,7 +40,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "/usuario/buscarUsuario/{login}").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/autenticar/refreshToken").permitAll()
                         .requestMatchers(HttpMethod.POST, "/autenticar/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/testar-api").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/teste-api").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
